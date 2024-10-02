@@ -1,7 +1,10 @@
 const Book = require("../model/Book");
+const fs = require('fs');
 
 exports.getAllBooks = (req, res, next) => {
-
+    Book.find()
+        .then(books => res.status(200).json(books))
+        .catch(error => res.status(404).json({ error }));
 }
 
 exports.getBookById = (req, res, next) => {
@@ -50,7 +53,22 @@ exports.modifyBook = (req, res, next) => {
 }
 
 exports.deleteBook = (req, res, next) => {
-    
+    Book.findOne({ _id: req.params.id})
+    .then(book => {
+        if (book.userId != req.auth.userId) {
+            res.status(403).json({message: '403: unauthorized request'});
+        } else {
+            const filename = book.imageUrl.split('/image/')[1];
+            fs.unlink(`image/${filename}`, () => {
+                Book.deleteOne({_id: req.params.id})
+                    .then(() => { res.status(200).json({message: 'Objet supprimé !'})})
+                    .catch(error => res.status(401).json({ error }));
+            });
+        }
+    })
+    .catch( error => {
+        res.status(500).json({ error });
+    });
 }
 
 exports.rateBook = (req, res, next) => {
