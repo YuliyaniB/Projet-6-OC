@@ -1,11 +1,16 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const path = require('path');
+const dotenv = require("dotenv");
 
-const Book = require("./models/Book");
+const bookRoutes = require("./route/bookRoutes");
+const userRoutes = require("./route/userRoutes");
+
+dotenv.config();
 
 mongoose
   .connect(
-    "mongodb+srv://julienb:julienb59200++@cluster0.d8ksr.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0",
+    "mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@cluster0.d8ksr.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0",
     { useNewUrlParser: true, useUnifiedTopology: true }
   )
   .then(() => console.log("Connexion à MongoDB réussie !"))
@@ -13,8 +18,15 @@ mongoose
 
 const app = express();
 
-app.use((req, res) => {
-  res.json({ message: "Votre requete a bien été reçue." });
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+  next();
 });
+
+app.use("/api/book", bookRoutes);
+app.use("/api/auth", userRoutes);
+app.use('/image', express.static(path.join(__dirname, 'image')));
 
 module.exports = app;
