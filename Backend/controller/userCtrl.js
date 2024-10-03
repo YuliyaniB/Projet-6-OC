@@ -1,7 +1,10 @@
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const dotenv = require('dotenv');
 
-const User = require("../model/User");
+const User = require('../model/User');
+
+dotenv.config();
 
 exports.signup = (req, res, next) => {
   bcrypt
@@ -13,7 +16,7 @@ exports.signup = (req, res, next) => {
       });
       user
         .save()
-        .then(() => res.status(201).json({ message: "Utilisateur créé !" }))
+        .then(() => res.status(201).json({ message: 'Utilisateur créé !' }))
         .catch((error) => res.status(400).json({ error }));
     })
     .catch((error) => res.status(500).json({ error }));
@@ -25,7 +28,7 @@ exports.login = (req, res, next) => {
       if (!user) {
         return res
           .status(401)
-          .json({ message: "Paire login/mot de passe incorrecte" });
+          .json({ message: 'Paire login/mot de passe incorrecte' });
       }
       bcrypt
         .compare(req.body.password, user.password)
@@ -33,13 +36,13 @@ exports.login = (req, res, next) => {
           if (!valid) {
             return res
               .status(401)
-              .json({ message: "Paire login/mot de passe incorrecte" });
+              .json({ message: 'Paire login/mot de passe incorrecte' });
           }
           res.status(200).json({
             userId: user._id,
             token: jwt.sign(
                 { userId: user._id },
-                'RANDOM_TOKEN_SECRET',
+                process.env.JWT_SECRET,
                 { expiresIn: '24h' }
             )
           });
@@ -48,6 +51,3 @@ exports.login = (req, res, next) => {
     })
     .catch((error) => res.status(500).json({ error }));
 };
-
-
-// modifier ligne 42 token random
