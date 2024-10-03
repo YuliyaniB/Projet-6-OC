@@ -1,5 +1,7 @@
-const mongoose = require("mongoose");
+// Importation de la bibliothèque mongoose pour interagir avec MongoDB
+const mongoose = require('mongoose');
 
+// Définition du schéma pour les "Book" dans MongoDB
 const bookSchema = mongoose.Schema({
   userId: { type: String, required: true },
   title: { type: String, required: true },
@@ -16,4 +18,5 @@ const bookSchema = mongoose.Schema({
   averageRating: { type: Number },
 });
 
-module.exports = mongoose.model("Book", bookSchema);
+// Exportation du modèle "Book", basé sur le schéma "bookSchema"
+module.exports = mongoose.model('Book', bookSchema);

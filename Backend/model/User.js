@@ -1,4 +1,4 @@
-// Importation du module mongoose pour la gestion de la base de données MongoDB
+// Importation de la bibliothèque mongoose pour interagir avec MongoDB
 const mongoose = require("mongoose");
 // Importation du plugin mongoose-unique-validator pour valider l'unicité des champs
 const uniqueValidator = require("mongoose-unique-validator");
@@ -13,6 +13,5 @@ const userSchema = mongoose.Schema({
 // Cela permet d'afficher des erreurs plus explicites si un email déjà utilisé est entré
 userSchema.plugin(uniqueValidator);
 
-// Exportation du modèle User basé sur le schéma userSchema
-// Ce modèle sera utilisé pour interagir avec la collection "users" dans MongoDB
+// Exportation du modèle "User", basé sur le schéma "userSchema"
 module.exports = mongoose.model("User", userSchema);
