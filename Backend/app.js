@@ -1,21 +1,24 @@
-const express = require("express");
-const mongoose = require("mongoose");
-const path = require("path");
-require("dotenv").config();
+const express = require('express');
+const mongoose = require('mongoose');
+const path = require('path');
+require('dotenv').config();
+const helmet = require('helmet');
 
 const bookRoutes = require("./route/bookRoutes");
 const userRoutes = require("./route/userRoutes");
 
 mongoose
-  .connect(
-    "mongodb+srv://julienb:PVX18pdsWUa9da7P@cluster0.d8ksr.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0",
-    { useNewUrlParser: true, useUnifiedTopology: true }
-  )
+  .connect(process.env.MONGODB_URL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
   .then(() => console.log("Connexion à MongoDB réussie !"))
   .catch(() => console.log("Connexion à MongoDB échouée !"));
 
 const app = express();
 app.use(express.json());
+
+app.use(helmet());
 
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
