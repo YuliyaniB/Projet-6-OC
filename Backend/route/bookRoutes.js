@@ -14,10 +14,10 @@ router.get("/:id", bookCtrl.getBookById);
 
 router.post("/", auth, multerConfig, optimizeImg, bookCtrl.createBook);
 
+router.post("/:id/rating", auth, bookCtrl.rateBook);
+
 router.put("/:id", auth, multerConfig, optimizeImg, bookCtrl.modifyBook);
 
 router.delete("/:id", auth, bookCtrl.deleteBook);
-
-router.post("/:id/rating", auth, bookCtrl.rateBook);
 
 module.exports = router;

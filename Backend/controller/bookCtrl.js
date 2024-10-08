@@ -1,5 +1,6 @@
 const Book = require("../model/Book");
 const fs = require("fs");
+const average = require("../helper/average")
 
 exports.getAllBooks = (req, res, next) => {
   Book.find()
@@ -19,9 +20,9 @@ exports.getBestRatedBooks = (req, res, next) => {
     .limit(3)
     .then((books) => res.status(200).json(books))
     .catch((error) => {
-      console.log(error);  
-      res.status(404).json({ error })});
-
+      console.log(error);
+      res.status(404).json({ error });
+    });
 };
 
 exports.createBook = (req, res, next) => {
@@ -95,8 +96,10 @@ exports.deleteBook = (req, res, next) => {
 };
 
 exports.rateBook = (req, res, next) => {
+
   if (0 <= req.body.rating <= 5) {
     const ratingObject = { ...req.body, grade: req.body.rating };
+
     delete ratingObject._id;
 
     Book.findOne({ _id: req.params.id })

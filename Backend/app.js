@@ -8,14 +8,6 @@ const rateLimit = require('express-rate-limit');
 const bookRoutes = require("./route/bookRoutes");
 const userRoutes = require("./route/userRoutes");
 
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 100,
-  message: "Trop de requêtes provenant de cette IP, réessayez plus tard.",
-});
-
-app.use('/api/', limiter);
-
 mongoose
   .connect(process.env.MONGODB_URL, {
     useNewUrlParser: true,
@@ -45,6 +37,14 @@ app.use((req, res, next) => {
   }
   next();
 });
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  message: "Trop de requêtes provenant de cette IP, réessayez plus tard.",
+});
+
+app.use("/api/", limiter);
 
 app.use("/api/books", bookRoutes);
 app.use("/api/auth", userRoutes);
