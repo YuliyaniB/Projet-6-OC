@@ -19,7 +19,7 @@ const optimizeImage = (req, res, next) => {
 
   // Utilisation de sharp pour redimensionner et convertir l'image
   sharp(inputFilePath)
-    .resize(400, 600) // Redimensionnement de l'image à 400x600 pixels
+    .resize({ fit: "cover", width: 400, height: 600 }) // Redimensionnement de l'image à 400x600 pixels
     .toFormat("webp") // Conversion de l'image au format WebP
     .toFile(outputFilePath) // Sauvegarde du fichier WebP à l'emplacement spécifié
     .then(() => {
